@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Sample EBS Volume with EC2 instance template
+Resources:
+  Ec2Volume1: # Noncompliant (S6275)
+    Type: AWS::EC2::Volume
+    Properties:
+      Size: '5'
+      AvailabilityZone: us-east-1a
+    DeletionPolicy: Snapshot
+  Ec2Volume2:
+    Type: AWS::EC2::Volume
+    Properties:
+      Size: '5'
+      Encrypted: false # Noncompliant (S6275)
+      AvailabilityZone: us-east-1a
+    DeletionPolicy: Snapshot
+
+  LaunchConfig1:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      BlockDeviceMappings: 
+        - DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+  LaunchConfig2:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      BlockDeviceMappings: 
+        - DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted: false
