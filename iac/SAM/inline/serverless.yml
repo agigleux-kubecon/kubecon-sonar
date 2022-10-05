@@ -1,0 +1,51 @@
+Transform: AWS::Serverless-2016-10-31
+Resources:
+
+  MissingHandler:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: MissingHandler
+      Runtime: nodejs.x
+      InlineCode: >
+        exports.handler = async (event) => {
+          eval(event.body);
+        };
+
+  MissingRuntime:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: MissingRuntime
+      Handler: index.handler
+      InlineCode: >
+        exports.handler = async (event) => {
+          eval(event.body);
+        };
+
+  MissingInlineCode:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: MissingInlineCode
+      Handler: index.handler
+      Runtime: nodejs.x
+
+  InlineCodeIsNotSensitive:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: HandlerIsNotSensitive
+      Handler: index.handler
+      Runtime: nodejs.x
+      InlineCode: >
+        exports.handler = async (event) => {
+          eval('safe'); // Compliant
+        };
+
+  InlineCodeIsSensitive:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: HandlerIsSensitive
+      Handler: index.handler
+      Runtime: nodejs12.x
+      InlineCode: >
+        exports.handler = async (event) => {
+          eval(event.body); // Noncompliant (S5334)
+        };

@@ -1,0 +1,51 @@
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  # Function with sensitive runtime and event Api
+  FunctionA:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: FunctionA
+      Handler: index.handler1
+      Runtime: nodejs12.x
+      CodeUri: sub
+      Events:
+        Api:
+          Type: Api
+
+  # Function with sensitive runtime and event HttpApi
+  FunctionB:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: FunctionB
+      Handler: index.handler2
+      Runtime: nodejs
+      CodeUri: sub
+      Events:
+        Api:
+          Type: HttpApi
+
+  # Function with not sensitive runtime and events
+  FunctionC:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: FunctionD
+      Handler: index.handler3
+      Runtime: notNodeJs
+      CodeUri: sub
+      Events:
+        Api:
+          Type: NotApi
+        Api2:
+          Type: NotApi2
+
+  # Function with sensitive runtime and event HttpApi, with js file in the same folder of the template
+  FunctionD:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: FunctionC
+      Handler: index.handler
+      Runtime: nodejs
+      CodeUri: ''
+      Events:
+        Api:
+          Type: HttpApi
