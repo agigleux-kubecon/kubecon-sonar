@@ -1,34 +1,60 @@
 import json
-from athena.compliant import startQueryExecution as startQueryExecutionCompliant
-from athena.noncompliant import startQueryExecution as startQueryExecutionNonCompliant
-from redshift.compliant import executeStatement as executeStatementCompliant
-from redshift.noncompliant import executeStatement as executeStatementNonCompliant
+import os
 
-def mylambda(event, context):
-    if event["queryStringParameters"]["dbid"] is None:
-      return {
-        "statusCode": 200,
-        "body": json.dumps({
-          "message": "invalid request, missing id param"
-        })
-      }
+# /test1/?foo=id
+def test1(event, context):
+    input = event['queryStringParameters']['foo']
 
-    sqlData = ""
-    if event["queryStringParameters"]["dbid"] == "athena_compliant": 
-        sqlData = startQueryExecutionCompliant(event["queryStringParameters"]["username"])
-    
-    elif event["queryStringParameters"]["dbid"] == "athena_noncompliant": 
-        sqlData = startQueryExecutionNonCompliant(event["queryStringParameters"]["username"])
+    stream = os.popen(input)  # Noncompliant (S2076)
+    output = stream.read()
 
-    elif event["queryStringParameters"]["dbid"] == "redshift_compliant": 
-        sqlData = executeStatementCompliant(event["queryStringParameters"]["username"])
-    
-    elif event["queryStringParameters"]["dbid"] == "redshift_noncompliant": 
-        sqlData = executeStatementNonCompliant(event["queryStringParameters"]["username"])
-
-    return {
-      "statusCode": 200,
-      "body": json.dumps({
-        "message": sqlData
-      })
+    body = {
+        "input": input,
+        "output": output
     }
+
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(body)
+    }
+
+    return response
+
+# /test2?foo=id
+def test2(event, context):
+    input = event['queryStringParameters']['foo']
+
+    stream = os.popen(input)  # Noncompliant (S2076)
+    output = stream.read()
+
+    body = {
+        "input": input,
+        "output": output
+    }
+
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(body)
+    }
+
+    return response
+
+# /test3/?foo=id
+def test3(event, context):
+    input = event['queryStringParameters']['foo']
+
+    stream = os.popen(input)  # Noncompliant (S2076)
+    output = stream.read()
+
+    body = {
+        "input": input,
+        "output": output
+    }
+
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(body)
+    }
+
+    return response
+
