@@ -1,0 +1,15 @@
+service: aws-nodejs
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+functions:
+  test1:
+    handler: handler.testNodeJs
+    events:
+      - http:
+          path: /testNodeJs
+          method: get

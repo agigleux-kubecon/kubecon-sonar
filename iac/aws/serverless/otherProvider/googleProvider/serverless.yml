@@ -1,0 +1,15 @@
+service: google-python
+frameworkVersion: '2'
+
+provider:
+  name: google
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+functions:
+  test1:
+    handler: handler.testGoogle
+    events:
+      - http:
+          path: /testGoogle
+          method: get
